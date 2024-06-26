@@ -92,3 +92,7 @@ temp/
 
 # Uploaded files (if your app handles file uploads)
 uploads/
+
+
+client/node_modules/
+client/.env
