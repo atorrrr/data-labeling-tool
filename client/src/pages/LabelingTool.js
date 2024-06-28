@@ -31,7 +31,8 @@ const StyledPre = styled('pre')(({ theme }) => ({
 
 function LabelingTool() {
   const [currentItem, setCurrentItem] = useState(null);
-  const [label, setLabel] = useState('');
+  const [currentLabel, setCurrentLabel] = useState('');
+  const [progress, setProgress] = useState({ total: 0, labeled: 0 });
   const [labelOptions, setLabelOptions] = useState([]);
   const [allKeys, setAllKeys] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
@@ -60,7 +61,7 @@ function LabelingTool() {
         return;
       }
       setCurrentItem(res.data);
-      setLabel(res.data.label || '');
+      setCurrentLabel(res.data.label || '');
       setLabelOptions(res.data.labelOptions || []);
       setAllKeys(res.data.allKeys || []);
       if (selectedKeys.length === 0) {
@@ -73,12 +74,12 @@ function LabelingTool() {
   };
 
   const submitLabel = async () => {
-    if (!label) {
+    if (!currentLabel) {
       alert('Please select a label before saving.');
       return;
     }
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/items/label`, { itemId: currentItem.id, label });
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/items/label`, { itemId: currentItem.id, label: currentLabel });
       navigateItem('next');
     } catch (err) {
       console.error('Error submitting label', err);
@@ -95,7 +96,7 @@ function LabelingTool() {
         return;
       }
       setCurrentItem(res.data);
-      setLabel(res.data.label || '');
+      setCurrentLabel(res.data.label || '');
       setLabelOptions(res.data.labelOptions || []);
     } catch (err) {
       console.error(`Error navigating ${direction}`, err);
@@ -198,8 +199,8 @@ function LabelingTool() {
           {labelOptions.map((option) => (
             <Button
               key={option}
-              variant={label === option ? "contained" : "outlined"}
-              onClick={() => setLabel(option)}
+              variant={currentLabel === option ? "contained" : "outlined"}
+              onClick={() => setCurrentLabel(option)}
               sx={{ mr: 1, mb: 1 }}
             >
               {option}
