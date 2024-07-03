@@ -95,4 +95,7 @@ uploads/
 
 
 client/node_modules/
+server/node_modules
+uploads/
 client/.env
+server/package-lock.json
